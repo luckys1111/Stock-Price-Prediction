@@ -1,0 +1,26 @@
+N_STEPS = 50
+LOOKUP_STEP = 15
+SCALE = True
+scale_str = f"sc-{int(SCALE)}"
+SHUFFLE = True
+shuffle_str = f"sh-{int(SHUFFLE)}"
+SPLIT_BY_DATE = False
+split_by_date_str = f"sbd-{int(SPLIT_BY_DATE)}"
+TEST_SIZE = 0.2
+FEATURE_COLUMNS = ["adjclose", "volume", "open", "high", "low"]
+date_now = time.strftime("%Y-%m-%d")
+N_LAYERS = 2
+CELL = LSTM
+UNITS = 256
+DROPOUT = 0.4
+BIDIRECTIONAL = False
+LOSS = "huber_loss"
+OPTIMIZER = "adam"
+BATCH_SIZE = 64
+EPOCHS = 100
+ticker = "AMZN"
+ticker_data_filename = os.path.join("data", f"{ticker}_{date_now}.csv")
+model_name = f"{date_now}_{ticker}-{shuffle_str}-{scale_str}-{split_by_date_str}-\
+{LOSS}-{OPTIMIZER}-{CELL._name_}-seq-{N_STEPS}-step-{LOOKUP_STEP}-layers-{N_LAYERS}-units-{UNITS}"
+if BIDIRECTIONAL:
+    model_name += "-b"

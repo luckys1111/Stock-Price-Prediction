@@ -1,0 +1,16 @@
+def get_final_df(model, data):
+    buy_profit  = lambda current, pred_future, true_future: true_future - current if pred_future > current else 0
+    sell_profit = lambda current, pred_future, true_future: current - true_future if pred_future < current else 0
+    X_test = data["X_test"]
+    y_test = data["y_test"]
+    y_pred = model.predict(X_test)
+    if SCALE:
+        y_test = np.squeeze(data["column_scaler"]["adjclose"].inverse_transform(np.expand_dims(y_test, axis=0)))
+        y_pred = np.squeeze(data["column_scaler"]["adjclose"].inverse_transform(y_pred))
+    test_df = data["test_df"]
+    test_df[f"adjclose_{LOOKUP_STEP}"] = y_pred
+    test_df[f"true_adjclose_{LOOKUP_STEP}"] = y_test
+    test_df.sort_index(inplace=True)
+    final_df = test_df
+    final_df["buy_profit"] = list(map(buy_profit, 
+                                    final_df["adjclose"], 
